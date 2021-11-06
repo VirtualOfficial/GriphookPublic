@@ -14,13 +14,14 @@ local DraggableObject 		= {}
 DraggableObject.__index 	= DraggableObject
 
 -- Sets up a new draggable object
-function DraggableObject.new(Object)
+function DraggableObject.new(Object,Input)
 	local self 			= {}
 	self.Object			= Object
-	self.DragStarted	= nil
-	self.DragEnded		= nil
-	self.Dragged		= nil
-	self.Dragging		= false
+	self.DragStarted		= nil
+	self.DragEnded			= nil
+	self.Dragged			= nil
+	self.Dragging			= false
+	self.Input 			= Input
 	
 	setmetatable(self, DraggableObject)
 	
@@ -33,7 +34,8 @@ function DraggableObject:Enable()
 	local dragInput			= nil
 	local dragStart			= nil
 	local startPos			= nil
-	local preparingToDrag	= false
+	local preparingToDrag		= false
+	local Input 			= self.Input
 	
 	-- Updates the element
 	local function update(input)
@@ -44,7 +46,7 @@ function DraggableObject:Enable()
 		return newPosition
 	end
 	
-	self.InputBegan = object.InputBegan:Connect(function(input)
+	self.InputBegan = Input.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			preparingToDrag = true
 			--[[if self.DragStarted then
@@ -72,7 +74,7 @@ function DraggableObject:Enable()
 		end
 	end)
 	
-	self.InputChanged = object.InputChanged:Connect(function(input)
+	self.InputChanged = Input.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			dragInput = input
 		end
